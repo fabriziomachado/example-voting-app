@@ -1,24 +1,18 @@
-# The manifest for the "result" service.
-# Read the full specification for the "Load Balanced Web Service" type at:
-#  https://github.com/aws/copilot-cli/wiki/Manifests#load-balanced-web-svc
+# The manifest for the "redis" service.
+# Read the full specification for the "Backend Service" type at:
+#  https://github.com/aws/copilot-cli/wiki/Manifests#backend-svc
 
 # Your service name will be used in naming your resources like log groups, ECS services, etc.
-name: result
-# The "architecture" of the service you're running.
-type: Load Balanced Web Service
+name: redis
+
+# Your service is reachable at "http://redis.${COPILOT_SERVICE_DISCOVERY_ENDPOINT}:6379" but is not public.
+type: Backend Service
 
 image:
   # Docker build arguments. You can specify additional overrides here. Supported: dockerfile, context, args
-  build: ./result/Dockerfile
+  build: ./redis/Dockerfile
   # Port exposed through your container to route traffic to it.
-  port: 80
-
-http:
-  # Requests to this path will be forwarded to your service. 
-  # To match all requests you can use the "/" path. 
-  path: 'result'
-  # You can specify a custom health check path. The default is "/"
-  healthcheck: '/result'
+  port: 6379
 
 # Number of CPU units for the task.
 cpu: 256
@@ -31,13 +25,9 @@ count: 1
 #
 #variables:                    # Pass environment variables as key value pairs.
 #  LOG_LEVEL: info
-variables:
-  POSTGRES_USER: postgres
 
 #secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
 #  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM      parameter.
-secrets:
-  POSTGRES_PASSWORD: /voting-app/test/POSTGRES_PASSWORD
 
 # You can override any of the values defined above by environment.
 #environments:
