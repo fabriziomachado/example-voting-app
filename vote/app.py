@@ -8,12 +8,14 @@ import json
 option_a = os.getenv('OPTION_A', "Cats")
 option_b = os.getenv('OPTION_B', "Dogs")
 hostname = socket.gethostname()
+sd_endpoint = os.getenv('COPILOT_SERVICE_DISCOVERY_ENDPOINT')
+redis_host = "redis.{}".format(sd_endpoint)
 
 app = Flask(__name__)
 
 def get_redis():
     if not hasattr(g, 'redis'):
-        g.redis = Redis(host="redis", db=0, socket_timeout=5)
+        g.redis = Redis(host=redis_host, db=0, socket_timeout=5)
     return g.redis
 
 @app.route("/", methods=['POST','GET'])
