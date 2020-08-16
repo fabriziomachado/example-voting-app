@@ -8,11 +8,15 @@ var express = require('express'),
     methodOverride = require('method-override'),
     app = express(),
     server = require('http').Server(app),
-    io = require('socket.io')(server);
+    io = require('socket.io')(server, {path: '/result/socket.io'});
 
 io.set('transports', ['polling']);
 
 var port = process.env.PORT || 4000;
+var sdEndpoint = process.env.COPILOT_SERVICE_DISCOVERY_ENDPOINT;
+var pgUser = process.env.POSTGRES_USER;
+var pgPassword = process.env.POSTGRES_PASSWORD;
+var pgConn = "postgres://" + pgUser + ":" + pgPassword + "@db." + sdEndpoint + "/postgres";
 
 io.sockets.on('connection', function (socket) {
 
@@ -24,7 +28,7 @@ io.sockets.on('connection', function (socket) {
 });
 
 var pool = new pg.Pool({
-  connectionString: 'postgres://postgres:postgres@db/postgres'
+  connectionString: pgConn
 });
 
 async.retry(
@@ -70,7 +74,8 @@ function collectVotesFromResult(result) {
 }
 
 app.use(cookieParser());
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -79,9 +84,8 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(express.static(__dirname + '/views'));
-
-app.get('/', function (req, res) {
+app.use('/result/static', express.static(path.join(__dirname, 'views')))
+app.get('/result', function (req, res) {
   res.sendFile(path.resolve(__dirname + '/views/index.html'));
 });
 
