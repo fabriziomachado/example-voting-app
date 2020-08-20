@@ -30,10 +30,17 @@ variables:
 
 #secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
 #  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM      parameter.
-secrets:
-  POSTGRES_PASSWORD: /voting-app/test/POSTGRES_PASSWORD
 
 # You can override any of the values defined above by environment.
 #environments:
 #  test:
 #    count: 2               # Number of tasks to run for the "test" environment.
+environments:
+  test:
+    secrets:
+      POSTGRES_PASSWORD: /voting-app/test/POSTGRES_PASSWORD
+  prod:
+    memory: 1024
+    cpu: 512
+    secrets:
+      POSTGRES_PASSWORD: /voting-app/prod/POSTGRES_PASSWORD
