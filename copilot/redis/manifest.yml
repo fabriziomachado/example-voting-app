@@ -22,11 +22,13 @@ exec: true     # Enable running commands in your container.
 variables:
   POSTGRES_USER: postgres
 
-secrets:
-  POSTGRES_PASSWORD: /copilot/voting-app/test/secrets/POSTGRES_PASSWORD  
-  # POSTGRES_PASSWORD: /voting-app/test/POSTGRES_PASSWORD
-  
-# You can override any of the values defined above by environment.
-#environments:
-#  test:
-#    count: 2               # Number of tasks to run for the "test" environment.
+environments:
+  test:
+    count: 1               # Number of tasks to run for the "test" environment.
+    secrets:
+      POSTGRES_PASSWORD: /copilot/voting-app/test/secrets/POSTGRES_PASSWORD
+
+  unesc-lab:
+    count: 1
+    secrets: 
+      POSTGRES_PASSWORD: /copilot/voting-app/unesc-lab/secrets/POSTGRES_PASSWORD

@@ -32,9 +32,9 @@ variables:
 
 environments:
   test:
+    count: 1               # Number of tasks to run for the "test" environment.
     secrets:
       POSTGRES_PASSWORD: /copilot/voting-app/test/secrets/POSTGRES_PASSWORD
-    count: 2               # Number of tasks to run for the "test" environment.
   unesc-lab:
     count: 2
     secrets: 
