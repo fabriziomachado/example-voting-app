@@ -90,7 +90,62 @@ Architecture
 * A [Node.js](/result) or [ASP.NET Core SignalR](/result/dotnet) webapp which shows the results of the voting in real time
 
 
-Note
-----
+Notes
+-----
 
 The voting application only accepts one vote per client. It does not register votes if a vote has already been submitted from a client.
+
+This isn't an example of a properly architected perfectly designed distributed app... it's just a simple 
+example of the various types of pieces and languages you might see (queues, persistent data, etc), and how to 
+deal with them in Docker at a basic level. 
+
+
+
+
+COPILOT shell
+-----
+Run the following command to create the deployments and services objects:
+```
+$ copilot app init voting-app
+
+$ aws configure list-profiles
+$ aws configure list --profile unesc-lab
+$ aws configure list --profile default 
+
+$ copilot env init -n test --profile default --default-config
+
+$ mkdir db
+$ echo "FROM postgres:9.4" > ./db/Dockerfile
+
+$ copilot svc init --name db --svc-type "Backend Service" --dockerfile ./db/Dockerfile --port 5432
+
+$ copilot secret init --name POSTGRES_PASSWORD 
+
+$ copilot svc deploy --name db --env test
+$ copilot svc status db
+$ copilot svc logs db
+
+$ // service REDIS
+$ mkdir redis
+$ echo "FROM redis:alpine" > ./redis/Dockerfile
+$ copilot svc init --name redis --svc-type "Backend Service" --dockerfile ./redis/Dockerfile --port 6379
+$ copilot svc deploy --name redis --env test
+
+$ copilot svc show 
+
+$ // WORKER
+$ copilot svc init --name worker --svc-type "Backend Service" --dockerfile ./worker/Dockerfile --port 8080
+
+$ copilot svc deploy --name worker --env test
+
+$ // VOTE
+$ copilot svc init --name vote --svc-type "Load Balanced Web Service" --dockerfile ./vote/Dockerfile
+$ copilot svc deploy --name vote --env test
+
+$ // RESULT
+$ copilot svc init --name result --svc-type "Load Balanced Web Service" --dockerfile ./result/Dockerfile
+
+
+
+
+```

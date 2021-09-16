@@ -16,13 +16,12 @@ namespace Worker
         {
             try
             {
-                var sdEndpoint =  Environment.GetEnvironmentVariable("COPILOT_SERVICE_DISCOVERY_ENDPOINT");
-                
+                var sdEndPoint =Environment.GetEnvironmentVariable("COPILOT_SERVICE_DISCOVERY_ENDPOINT");
                 var pgUser = Environment.GetEnvironmentVariable("POSTGRES_USER");
                 var pgPassword = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
-                var pgConn = "Server=db." + sdEndpoint + ";Username=" + pgUser + ";Password=" + pgPassword + ";";
-                var redisHost = "redis." + sdEndpoint; 
+                var pgConn = "Server=db." + sdEndPoint + ";Username=" + pgUser + ";Password=" + pgPassword +";";
+                var redisHost = "redis."+ sdEndPoint;
 
                 var pgsql = OpenDbConnection(pgConn);
                 var redisConn = OpenRedisConnection(redisHost);
@@ -42,7 +41,7 @@ namespace Worker
                     // Reconnect redis if down
                     if (redisConn == null || !redisConn.IsConnected) {
                         Console.WriteLine("Reconnecting Redis");
-                        redisConn = OpenRedisConnection(redisHost);
+                        redisConn = OpenRedisConnection("redis");
                         redis = redisConn.GetDatabase();
                     }
                     string json = redis.ListLeftPopAsync("votes").Result;
@@ -54,7 +53,7 @@ namespace Worker
                         if (!pgsql.State.Equals(System.Data.ConnectionState.Open))
                         {
                             Console.WriteLine("Reconnecting DB");
-                            pgsql = OpenDbConnection(pgConn);
+                            pgsql = OpenDbConnection("Server=db;Username=postgres;Password=postgres;");
                         }
                         else
                         { // Normal +1 vote requested
