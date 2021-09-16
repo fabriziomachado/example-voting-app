@@ -145,6 +145,28 @@ $ copilot svc deploy --name vote --env test
 $ // RESULT
 $ copilot svc init --name result --svc-type "Load Balanced Web Service" --dockerfile ./result/Dockerfile
 
+$ copilot secret init --app voting-app --name POSTGRES_PASSWORD --values unesc-lab=1231321231
+
+
+
+
+
+PARTE 2 -- PIPELINE --
+$ copilot pipeline init
+
+example-voting-app on  master took 2s 
+❯ copilot pipeline update
+✔ Successfully added pipeline resources to your application: voting-app
+
+ACTION REQUIRED! Go to https://console.aws.amazon.com/codesuite/settings/connections to update the status of connection copilot-fabri-example-voting-app from PENDING to AVAILABLE.
+✔ Successfully created a new pipeline: pipeline-voting-app-example-voting-app
+
+Recommended follow-up actions:
+- Run `copilot pipeline status` to see the state of your pipeline.
+- Run `copilot pipeline show` for info about your pipeline.
+
+-- ENV PROD
+$ copilot env init --name unesc-lab --profile unesc-lab --prod
 
 
 
