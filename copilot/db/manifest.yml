@@ -30,6 +30,10 @@ secrets:                      # Pass secrets from AWS Systems Manager (SSM) Para
   POSTGRES_PASSWORD: /copilot/voting-app/test/secrets/POSTGRES_PASSWORD
 
 # You can override any of the values defined above by environment.
-#environments:
-#  test:
-#    count: 2               # Number of tasks to run for the "test" environment.
+environments:
+  test
+    count: 2               # Number of tasks to run for the "test" environment.
+  unesc-lab
+    count: 2
+    secrets: 
+      POSTGRES_PASSWORD: /copilot/voting-app/unesc-lab/secrets/POSTGRES_PASSWORD

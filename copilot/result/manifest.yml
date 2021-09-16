@@ -34,13 +34,13 @@ exec: true     # Enable running commands in your container.
 variables:
   POSTGRES_USER: postgres
 
-#secrets:                      # Pass secrets from AWS Systems Manager (SSM) Parameter Store.
-#  GITHUB_TOKEN: GITHUB_TOKEN  # The key is the name of the environment variable, the value is the name of the SSM      parameter.
-secrets:
-  POSTGRES_PASSWORD: /copilot/voting-app/test/secrets/POSTGRES_PASSWORD
+environments:
+  test
+    count: 2               # Number of tasks to run for the "test" environment.
+    secrets:
+      POSTGRES_PASSWORD: /copilot/voting-app/test/secrets/POSTGRES_PASSWORD
 
-  
-# You can override any of the values defined above by environment.
-#environments:
-#  test:
-#    count: 2               # Number of tasks to run for the "test" environment.
+  unesc-lab
+    count: 2
+    secrets: 
+      POSTGRES_PASSWORD: /copilot/voting-app/unesc-lab/secrets/POSTGRES_PASSWORD
